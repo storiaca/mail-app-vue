@@ -5,7 +5,7 @@
     </div>
 
     <keep-alive>
-      <component :is="currentView.tag"></component>
+      <component :is="currentView.tag" :data="currentView.data"></component>
     </keep-alive>
   </aside>
 </template>
@@ -19,11 +19,18 @@
   import { eventBus } from './main';
   
   export default {
+    props: {
+      messages: {
+        type: Array,
+        required: true
+      }
+    },
     created() {
       eventBus.$on('changeView', (data) => {
         let temp = [{
           tag: data.tag,
-          title: data.title
+          title: data.title,
+          data: data.data || {}
         }];
 
         this.history = temp.concat(this.history.splice(0));
@@ -34,14 +41,19 @@
         history: [
           {
             tag: 'app-inbox',
-            title: 'Inbox'
+            title: 'Inbox',
+            data: {
+              messages: null
+            }
           }
         ]
       };
     },
     computed: {
       currentView() {
-        return this.history[0];
+        let current = this.history[0];
+        current.data.messages = this.messages;
+        return current;
       }
     },
     components: {
