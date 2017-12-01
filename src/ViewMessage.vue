@@ -25,6 +25,11 @@ export default {
       required: true
     }
   },
+  activated() {
+    if(typeof this.data.message.isRead !== 'undefined') {
+      this.data.message.isRead = true;
+    }
+  },
   filters: {
     formatBytes(bytes) { // filter for showing size
       if(bytes == 0) {
